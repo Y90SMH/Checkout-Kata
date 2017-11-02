@@ -7,7 +7,7 @@ namespace CheckoutKata.Models
         public PricingRule(string sku, int specialPrice, int denominator)
         {
             Denominator = denominator != 0 ? denominator : throw new ArgumentOutOfRangeException($"{nameof(denominator)} cannot be 0.");
-            Sku = string.IsNullOrWhiteSpace(sku) ? sku : throw new ArgumentException("Sku cannot be null or empty.");
+            Sku = !string.IsNullOrWhiteSpace(sku) ? sku : throw new ArgumentException("Sku cannot be null or empty.");
             SpecialPrice = specialPrice;
         }
 
