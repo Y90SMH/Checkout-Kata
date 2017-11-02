@@ -59,5 +59,26 @@ namespace CheckoutKata.UnitTests
 
             Assert.That(result, Is.EqualTo(80));
         }
+
+        [Test]
+        public void TotalPrice_Correct_If_One_Of_Each_Item_Scanned()
+        {
+            var items = new string[]
+            {
+                "A",
+                "B",
+                "C",
+                "D"
+            };
+
+            foreach (var item in items)
+            {
+                _sut.Scan(item);
+            }
+
+            var result = _sut.GetTotalPrice();
+
+            Assert.That(result, Is.EqualTo(115));
+        }
     }
 }
