@@ -1,5 +1,6 @@
 ﻿using CheckoutKata.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CheckoutKata
 {
@@ -12,24 +13,35 @@ namespace CheckoutKata
 
         public int GetTotalPrice()
         {
-            foreach (var item in _basket)
+            var items = _basket.GroupBy(x => x);
+
+            foreach (var item in items)
             {
-                if (item == "A")
+                if (item.Key == "A")
                 {
-                    _totalPrice += 50;
+                    var count = item.Count();
+
+                    var quotient = count / 3;
+                    var remainder = count % 3;
+
+                    for (var i = 0; i < quotient; i++)
+                    {
+                        _totalPrice += 130;
+                    }
+                    _totalPrice += 50 * remainder;
                 }
 
-                if (item == "B")
+                if (item.Key == "B")
                 {
                     _totalPrice += 30;
                 }
 
-                if (item == "C")
+                if (item.Key == "C")
                 {
                     _totalPrice += 20;
                 }
 
-                if (item == "D")
+                if (item.Key == "D")
                 {
                     _totalPrice += 15;
                 }
