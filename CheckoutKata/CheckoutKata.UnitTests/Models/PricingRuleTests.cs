@@ -12,10 +12,18 @@ namespace CheckoutKata.UnitTests.Models
         private readonly int _validSpecialPrice = 0;
 
         [Test]
-        public void Cannot_Create_PricingRule_With_NullOrWhitespace_Sku()
+        public void Cannot_Create_PricingRule_With_Null_Sku()
         {
             Assert.Throws<ArgumentException>(
                 () => new PricingRule(null, _validSpecialPrice, _validDenominator)
+            );
+        }
+
+        [Test]
+        public void Cannot_Create_PricingRule_With_Whitespace_Sku()
+        {
+            Assert.Throws<ArgumentException>(
+                () => new PricingRule(" ", _validSpecialPrice, _validDenominator)
             );
         }
 
