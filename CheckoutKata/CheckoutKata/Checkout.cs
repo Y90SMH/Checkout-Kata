@@ -8,7 +8,15 @@ namespace CheckoutKata
 
         public void Scan(string item)
         {
-            _totalPrice = 50;
+            if (item == "A")
+            {
+                _totalPrice = 50;
+            }
+
+            if (item == "B")
+            {
+                _totalPrice = 30;
+            }
         }
 
         public int GetTotalPrice()
