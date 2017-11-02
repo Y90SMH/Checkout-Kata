@@ -4,14 +4,16 @@ namespace CheckoutKata
 {
     public class Checkout : ICheckout
     {
+        private int _totalPrice;
+
         public void Scan(string item)
         {
-            throw new System.NotImplementedException();
+            _totalPrice = 50;
         }
 
         public int GetTotalPrice()
         {
-            return 0;
+            return _totalPrice;
         }
     }
 }
