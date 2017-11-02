@@ -37,6 +37,7 @@
   <ItemGroup>
     <Compile Include="Checkout.cs" />
     <Compile Include="Interfaces\ICheckout.cs" />
+    <Compile Include="Models\PricingRule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

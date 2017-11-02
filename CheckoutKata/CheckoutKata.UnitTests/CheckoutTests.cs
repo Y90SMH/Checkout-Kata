@@ -1,5 +1,7 @@
 ﻿using CheckoutKata.Interfaces;
+using CheckoutKata.Models;
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace CheckoutKata.UnitTests
 {
@@ -11,7 +13,7 @@ namespace CheckoutKata.UnitTests
         [SetUp]
         public void Setup()
         {
-            _sut = new Checkout();
+            _sut = new Checkout(null);
         }
 
         [Test]
@@ -146,14 +148,9 @@ namespace CheckoutKata.UnitTests
         [Test]
         public void TotalPrice_Correct_With_Alternative_B_Pricing_Rule()
         {
-            var pricingRules = new[]
+            var pricingRules = new List<PricingRule>
             {
-                new PricingRule
-                {
-                    Sku = "B",
-                    SpecialPrice = 50,
-                    Denominator = 2
-                }
+                new PricingRule("B", 50, 2)
             };
 
             var sut = new Checkout(pricingRules);

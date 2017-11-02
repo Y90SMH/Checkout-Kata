@@ -1,4 +1,5 @@
 ﻿using CheckoutKata.Interfaces;
+using CheckoutKata.Models;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,7 +8,13 @@ namespace CheckoutKata
     public class Checkout : ICheckout
     {
         private readonly ICollection<string> _basket = new List<string>();
+        private readonly IEnumerable<PricingRule> _pricingRules;
         private int _totalPrice;
+
+        public Checkout(IEnumerable<PricingRule> pricingRules)
+        {
+            _pricingRules = pricingRules ?? Enumerable.Empty<PricingRule>();
+        }
 
         public void Scan(string item) => _basket.Add(item);
 
@@ -17,47 +24,46 @@ namespace CheckoutKata
 
             foreach (var item in items)
             {
-                var count = item.Count();
-
-                if (item.Key == "A")
+                var unitPrice = 0;
+                switch (item.Key)
                 {
-                    _totalPrice += CalculateTotalForSku(count, 50, 130, 3);
+                    case "A":
+                        unitPrice = 50;
+                        break;
+                    case "B":
+                        unitPrice = 30;
+                        break;
+                    case "C":
+                        unitPrice = 20;
+                        break;
+                    case "D":
+                        unitPrice = 15;
+                        break;
                 }
 
-                if (item.Key == "B")
-                {
-                    _totalPrice += CalculateTotalForSku(count, 30, 45, 2);
-                }
-
-                if (item.Key == "C")
-                {
-                    _totalPrice += CalculateTotalForSku(count, 20);
-                }
-
-                if (item.Key == "D")
-                {
-                    _totalPrice += CalculateTotalForSku(count, 15);
-                }
+                _totalPrice += CalculateTotalForSku(item.Key, item.Count(), unitPrice);
             }
 
             return _totalPrice;
         }
 
-        private static int CalculateTotalForSku(int count, int unitPrice)
+        private int CalculateTotalForSku(string sku, int count, int unitPrice)
         {
-            return count * unitPrice;
-        }
+            var pricingRule = _pricingRules.SingleOrDefault(x => x.Sku == sku);
 
-        private static int CalculateTotalForSku(int count, int unitPrice, int specialPrice, int denominator)
-        {
+            if (pricingRule == null)
+            {
+                return count * unitPrice;
+            }
+
             var skuTotalPrice = 0;
 
-            var quotient = count / denominator;
-            var remainder = count % denominator;
+            var quotient = count / pricingRule.Denominator;
+            var remainder = count % pricingRule.Denominator;
 
             for (var i = 0; i < quotient; i++)
             {
-                skuTotalPrice += specialPrice;
+                skuTotalPrice += pricingRule.SpecialPrice;
             }
 
             skuTotalPrice += unitPrice * remainder;
