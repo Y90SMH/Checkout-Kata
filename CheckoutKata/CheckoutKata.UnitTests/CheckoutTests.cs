@@ -109,6 +109,13 @@ namespace CheckoutKata.UnitTests
         [Test]
         public void TotalPrice_Correct_If_Three_A_Scanned()
         {
+            var pricingRules = new List<PricingRule>
+            {
+                new PricingRule("A", 130, 3)
+            };
+
+            var sut = new Checkout(pricingRules);
+
             var items = new[]
             {
                 "A",
@@ -118,10 +125,10 @@ namespace CheckoutKata.UnitTests
 
             foreach (var item in items)
             {
-                _sut.Scan(item);
+                sut.Scan(item);
             }
 
-            var result = _sut.GetTotalPrice();
+            var result = sut.GetTotalPrice();
 
             Assert.That(result, Is.EqualTo(130));
         }
@@ -129,6 +136,13 @@ namespace CheckoutKata.UnitTests
         [Test]
         public void TotalPrice_Correct_If_Two_B_Scanned()
         {
+            var pricingRules = new List<PricingRule>
+            {
+                new PricingRule("B", 45, 2)
+            };
+
+            var sut = new Checkout(pricingRules);
+
             var items = new[]
             {
                 "B",
@@ -137,10 +151,10 @@ namespace CheckoutKata.UnitTests
 
             foreach (var item in items)
             {
-                _sut.Scan(item);
+                sut.Scan(item);
             }
 
-            var result = _sut.GetTotalPrice();
+            var result = sut.GetTotalPrice();
 
             Assert.That(result, Is.EqualTo(45));
         }
@@ -169,6 +183,38 @@ namespace CheckoutKata.UnitTests
             var result = sut.GetTotalPrice();
 
             Assert.That(result, Is.EqualTo(50));
+        }
+
+        [Test]
+        public void TotalPrice_Correct_With_Multiple_Pricing_Rules()
+        {
+            var pricingRules = new List<PricingRule>
+            {
+                new PricingRule("A", 130, 3),
+                new PricingRule("B", 45, 2)
+            };
+
+            var sut = new Checkout(pricingRules);
+
+            var items = new[]
+            {
+                "A",
+                "B",
+                "C",
+                "D",
+                "A",
+                "B",
+                "A"
+            };
+
+            foreach (var item in items)
+            {
+                sut.Scan(item);
+            }
+
+            var result = sut.GetTotalPrice();
+
+            Assert.That(result, Is.EqualTo(210));
         }
     }
 }
