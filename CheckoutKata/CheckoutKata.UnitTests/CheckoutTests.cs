@@ -142,5 +142,36 @@ namespace CheckoutKata.UnitTests
 
             Assert.That(result, Is.EqualTo(45));
         }
+
+        [Test]
+        public void TotalPrice_Correct_With_Alternative_B_Pricing_Rule()
+        {
+            var pricingRules = new[]
+            {
+                new PricingRule
+                {
+                    Sku = "B",
+                    SpecialPrice = 50,
+                    Denominator = 2
+                }
+            };
+
+            var sut = new Checkout(pricingRules);
+
+            var items = new[]
+            {
+                "B",
+                "B"
+            };
+
+            foreach (var item in items)
+            {
+                sut.Scan(item);
+            }
+
+            var result = sut.GetTotalPrice();
+
+            Assert.That(result, Is.EqualTo(50));
+        }
     }
 }
