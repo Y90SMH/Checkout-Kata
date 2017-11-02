@@ -10,12 +10,12 @@ namespace CheckoutKata
         {
             if (item == "A")
             {
-                _totalPrice = 50;
+                _totalPrice += 50;
             }
 
             if (item == "B")
             {
-                _totalPrice = 30;
+                _totalPrice += 30;
             }
         }
 

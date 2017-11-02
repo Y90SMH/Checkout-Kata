@@ -45,5 +45,19 @@ namespace CheckoutKata.UnitTests
 
             Assert.That(result, Is.EqualTo(30));
         }
+
+        [Test]
+        public void TotalPrice_Correct_If_One_A_And_One_B_Scanned()
+        {
+            const string itemA = "A";
+            const string itemB = "B";
+
+            _sut.Scan(itemA);
+            _sut.Scan(itemB);
+
+            var result = _sut.GetTotalPrice();
+
+            Assert.That(result, Is.EqualTo(80));
+        }
     }
 }
