@@ -63,7 +63,7 @@ namespace CheckoutKata.UnitTests
         [Test]
         public void TotalPrice_Correct_If_One_Of_Each_Item_Scanned()
         {
-            var items = new string[]
+            var items = new[]
             {
                 "A",
                 "B",
@@ -79,6 +79,29 @@ namespace CheckoutKata.UnitTests
             var result = _sut.GetTotalPrice();
 
             Assert.That(result, Is.EqualTo(115));
+        }
+
+        [Test]
+        public void TotalPrice_Correct_If_Variable_Amount_Of_Each_Item_Scanned()
+        {
+            var items = new[]
+            {
+                "A",
+                "A",
+                "B",
+                "C",
+                "C",
+                "D"
+            };
+
+            foreach (var item in items)
+            {
+                _sut.Scan(item);
+            }
+
+            var result = _sut.GetTotalPrice();
+
+            Assert.That(result, Is.EqualTo(185));
         }
     }
 }
