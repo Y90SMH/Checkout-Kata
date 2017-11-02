@@ -1,6 +1,6 @@
 ﻿namespace CheckoutKata.Interfaces
 {
-    interface ICheckout
+    public interface ICheckout
     {
         void Scan(string item);
         int GetTotalPrice();
