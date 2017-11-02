@@ -35,6 +35,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Checkout.cs" />
     <Compile Include="Interfaces\ICheckout.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
