@@ -17,37 +17,52 @@ namespace CheckoutKata
 
             foreach (var item in items)
             {
+                var count = item.Count();
+
                 if (item.Key == "A")
                 {
-                    var count = item.Count();
-
-                    var quotient = count / 3;
-                    var remainder = count % 3;
-
-                    for (var i = 0; i < quotient; i++)
-                    {
-                        _totalPrice += 130;
-                    }
-                    _totalPrice += 50 * remainder;
+                    _totalPrice += CalculateTotalForSku(count, 50, 130, 3);
                 }
 
                 if (item.Key == "B")
                 {
-                    _totalPrice += 30;
+                    _totalPrice += CalculateTotalForSku(count, 30, 45, 2);
                 }
 
                 if (item.Key == "C")
                 {
-                    _totalPrice += 20;
+                    _totalPrice += CalculateTotalForSku(count, 20);
                 }
 
                 if (item.Key == "D")
                 {
-                    _totalPrice += 15;
+                    _totalPrice += CalculateTotalForSku(count, 15);
                 }
             }
 
             return _totalPrice;
+        }
+
+        private static int CalculateTotalForSku(int count, int unitPrice)
+        {
+            return count * unitPrice;
+        }
+
+        private static int CalculateTotalForSku(int count, int unitPrice, int specialPrice, int denominator)
+        {
+            var skuTotalPrice = 0;
+
+            var quotient = count / denominator;
+            var remainder = count % denominator;
+
+            for (var i = 0; i < quotient; i++)
+            {
+                skuTotalPrice += specialPrice;
+            }
+
+            skuTotalPrice += unitPrice * remainder;
+
+            return skuTotalPrice;
         }
     }
 }

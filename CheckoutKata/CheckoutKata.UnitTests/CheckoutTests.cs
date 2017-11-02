@@ -123,5 +123,24 @@ namespace CheckoutKata.UnitTests
 
             Assert.That(result, Is.EqualTo(130));
         }
+
+        [Test]
+        public void TotalPrice_Correct_If_Two_B_Scanned()
+        {
+            var items = new[]
+            {
+                "B",
+                "B"
+            };
+
+            foreach (var item in items)
+            {
+                _sut.Scan(item);
+            }
+
+            var result = _sut.GetTotalPrice();
+
+            Assert.That(result, Is.EqualTo(45));
+        }
     }
 }
