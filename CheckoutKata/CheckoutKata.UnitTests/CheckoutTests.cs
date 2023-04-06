@@ -19,7 +19,9 @@ namespace CheckoutKata.UnitTests
             _pricingRules = new List<PricingRule>
             {
                 new PricingRule("A", 130, 3),
-                new PricingRule("B", 45, 2)
+                new PricingRule("B", 45, 2),
+                new PricingRule("C", 25, 2),
+                new PricingRule("D", 25, 2)
             };
         
             _sut = new Checkout(_pricingRules);
@@ -168,8 +170,10 @@ namespace CheckoutKata.UnitTests
 
         public static object[] VariableAmountOfItems =
         {
-            new object[] { new[] { "A", "A", "B", "C", "C", "D" }, 185 },
-            new object[] { new[] { "A", "B", "C", "D", "A", "B", "A" }, 210 }
+            new object[] { new[] { "A", "A", "B", "C", "C", "D" }, 170 },
+            new object[] { new[] { "A", "B", "C", "D", "A", "B", "A" }, 210 },
+            new object[] { new[] { "C", "C" }, 25 },
+            new object[] { new[] { "D", "D" }, 25 }
         };
     }
 }
