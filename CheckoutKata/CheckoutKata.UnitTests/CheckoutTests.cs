@@ -2,18 +2,27 @@
 using CheckoutKata.Models;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CheckoutKata.UnitTests
 {
     [TestFixture]
     public class CheckoutTests
     {
+        private List<PricingRule> _pricingRules;
+
         private ICheckout _sut;
 
         [SetUp]
         public void Setup()
         {
-            _sut = new Checkout(null);
+            _pricingRules = new List<PricingRule>
+            {
+                new PricingRule("A", 130, 3),
+                new PricingRule("B", 45, 2)
+            };
+        
+            _sut = new Checkout(_pricingRules);
         }
 
         [Test]
@@ -83,17 +92,27 @@ namespace CheckoutKata.UnitTests
             Assert.That(result, Is.EqualTo(115));
         }
 
+        [TestCaseSource(nameof(VariableAmountOfItems))]
+        public void TotalPrice_Correct_If_Variable_Amount_Of_Each_Item_Scanned(string[] items, int expectedTotal)
+        {
+            foreach (var item in items)
+            {
+                _sut.Scan(item);
+            }
+
+            var result = _sut.GetTotalPrice();
+
+            Assert.That(result, Is.EqualTo(expectedTotal));
+        }
+
         [Test]
-        public void TotalPrice_Correct_If_Variable_Amount_Of_Each_Item_Scanned()
+        public void TotalPrice_Correct_If_Three_A_Scanned()
         {
             var items = new[]
             {
                 "A",
                 "A",
-                "B",
-                "C",
-                "C",
-                "D"
+                "A"
             };
 
             foreach (var item in items)
@@ -103,46 +122,12 @@ namespace CheckoutKata.UnitTests
 
             var result = _sut.GetTotalPrice();
 
-            Assert.That(result, Is.EqualTo(185));
-        }
-
-        [Test]
-        public void TotalPrice_Correct_If_Three_A_Scanned()
-        {
-            var pricingRules = new List<PricingRule>
-            {
-                new PricingRule("A", 130, 3)
-            };
-
-            var sut = new Checkout(pricingRules);
-
-            var items = new[]
-            {
-                "A",
-                "A",
-                "A"
-            };
-
-            foreach (var item in items)
-            {
-                sut.Scan(item);
-            }
-
-            var result = sut.GetTotalPrice();
-
             Assert.That(result, Is.EqualTo(130));
         }
 
         [Test]
         public void TotalPrice_Correct_If_Two_B_Scanned()
         {
-            var pricingRules = new List<PricingRule>
-            {
-                new PricingRule("B", 45, 2)
-            };
-
-            var sut = new Checkout(pricingRules);
-
             var items = new[]
             {
                 "B",
@@ -151,10 +136,10 @@ namespace CheckoutKata.UnitTests
 
             foreach (var item in items)
             {
-                sut.Scan(item);
+                _sut.Scan(item);
             }
 
-            var result = sut.GetTotalPrice();
+            var result = _sut.GetTotalPrice();
 
             Assert.That(result, Is.EqualTo(45));
         }
@@ -162,12 +147,8 @@ namespace CheckoutKata.UnitTests
         [Test]
         public void TotalPrice_Correct_With_Alternative_B_Pricing_Rule()
         {
-            var pricingRules = new List<PricingRule>
-            {
-                new PricingRule("B", 50, 2)
-            };
-
-            var sut = new Checkout(pricingRules);
+            _pricingRules.Remove(_pricingRules.SingleOrDefault(x => x.Denominator == 2 && x.SpecialPrice == 45 && x.Sku == "B"));
+            _pricingRules.Add(new PricingRule("B", 50, 2));
 
             var items = new[]
             {
@@ -177,44 +158,18 @@ namespace CheckoutKata.UnitTests
 
             foreach (var item in items)
             {
-                sut.Scan(item);
+                _sut.Scan(item);
             }
 
-            var result = sut.GetTotalPrice();
+            var result = _sut.GetTotalPrice();
 
             Assert.That(result, Is.EqualTo(50));
         }
 
-        [Test]
-        public void TotalPrice_Correct_With_Multiple_Pricing_Rules()
+        public static object[] VariableAmountOfItems =
         {
-            var pricingRules = new List<PricingRule>
-            {
-                new PricingRule("A", 130, 3),
-                new PricingRule("B", 45, 2)
-            };
-
-            var sut = new Checkout(pricingRules);
-
-            var items = new[]
-            {
-                "A",
-                "B",
-                "C",
-                "D",
-                "A",
-                "B",
-                "A"
-            };
-
-            foreach (var item in items)
-            {
-                sut.Scan(item);
-            }
-
-            var result = sut.GetTotalPrice();
-
-            Assert.That(result, Is.EqualTo(210));
-        }
+            new object[] { new[] { "A", "A", "B", "C", "C", "D" }, 185 },
+            new object[] { new[] { "A", "B", "C", "D", "A", "B", "A" }, 210 }
+        };
     }
 }
